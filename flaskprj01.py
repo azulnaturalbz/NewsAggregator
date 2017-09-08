@@ -16,15 +16,27 @@ DEFAULTS = {'publication':'bbc',
             'city':'Belize,bz'}
 
 @app.route("/")
-def get_news():
-    query = request.args.get("publication")
+def home():
+
+    publication = request.args.get("publication")
+    if not publication:
+        publication = DEFAULTS['publication']
+    articles= get_news(publication)
+    #get cust weather based on user input or default
+    city = request.args.get('city')
+    if not city :
+        city = DEFAULTS['city']
+    weather = get_weather(city)
+    return render_template("home.html",articles=articles,weather=weather)
+
+
+def get_news(query):
     if not query or query.lower() not in RSS_FEEDS:
-        publication = "bbc"
+        publication = DEFAULTS["publication"]
     else:
         publication = query.lower()
     feed = feedparser.parse(RSS_FEEDS[publication])
-    weather = get_weather("Belize,bz")
-    return render_template("home.html",articles=feed['entries'],weather=weather)
+    return feed['entries']
 
 
 def get_weather(query):

@@ -1,3 +1,6 @@
+import json
+import urllib2
+import urllib
 import feedparser
 from flask import Flask
 from flask import render_template
@@ -9,6 +12,8 @@ RSS_FEEDS = {'bbc':'http://feeds.bbci.co.uk/news/rss.xml',
               'fox':'http://feeds.foxnews.com/foxnews/latest',
                 'iol':'http://www.iol.co.za/cmlink/1.640'}
 
+DEFAULTS = {'publication':'bbc',
+            'city':'Belize,bz'}
 
 @app.route("/")
 def get_news():
@@ -18,7 +23,23 @@ def get_news():
     else:
         publication = query.lower()
     feed = feedparser.parse(RSS_FEEDS[publication])
-    return render_template("home.html",articles=feed['entries'])
+    weather = get_weather("Belize,bz")
+    return render_template("home.html",articles=feed['entries'],weather=weather)
+
+
+def get_weather(query):
+    api_url = "http://api.openweathermap.org/data/2.5/weather?q={}&units=metric&appid=f47aeab3995ca500141e77a82f634ba6"
+    query = urllib.quote(query)
+    url = api_url.format(query)
+    data = urllib2.urlopen(url).read()
+    parsed = json.loads(data)
+    weather = None
+    if parsed.get("weather"):
+        weather = {"description":parsed["weather"][0]["description"],
+                   "temperature":parsed["main"]["temp"],
+                   "city":parsed["name"]}
+    return weather
+
 
 if __name__ == '__main__':
     app.run()

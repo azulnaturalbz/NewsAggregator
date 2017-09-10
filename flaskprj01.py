@@ -2,6 +2,8 @@ import json
 import urllib2
 import urllib
 import feedparser
+import datetime
+from flask import make_response
 from flask import Flask
 from flask import render_template
 from flask import request
@@ -27,7 +29,9 @@ def home():
     # get cust headlines , based on user input or default
     publication = request.args.get("publication")
     if not publication:
-        publication = DEFAULTS['publication']
+        publication = request.cookies.get("publication")
+        if not publication:
+            publication = DEFAULTS['publication']
     articles = get_news(publication)
     # get cust weather based on user input or default
     city = request.args.get('city')
@@ -42,9 +46,14 @@ def home():
     if not currency_to:
         currency_to = DEFAULTS['currency_to']
     rate, currencies = get_rate(currency_from, currency_to)
-    return render_template("home.html", articles=articles, weather=weather, currency_from=currency_from,
-                           currency_to=currency_to, rate=rate, currencies=sorted(currencies))
-
+    #return render_template("home.html", articles=articles, weather=weather, currency_from=currency_from,currency_to=currency_to, rate=rate, currencies=sorted(currencies))
+    response = make_response(render_template("home.html", articles=articles, weather=weather, currency_from=currency_from,currency_to=currency_to, rate=rate, currencies=sorted(currencies)))
+    expires = datetime.datetime.now() + datetime.timedelta(days=365)
+    response.set_cookie("publication",publication,expires=expires)
+    response.set_cookie("city",city,expires=expires)
+    response.set_cookie("currency_from",currency_from,expires=expires)
+    response.set_cookie("currency_to",currency_to,expires=expires)
+    return response
 
 def get_news(query):
     if not query or query.lower() not in RSS_FEEDS:

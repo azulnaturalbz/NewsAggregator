@@ -34,26 +34,34 @@ def get_value_with_fallback(key):
 
 @app.route("/")
 def home():
-    # get cust headlines , based on user input or default
-    publication = request.args.get("publication")
-    if not publication:
-        publication = request.cookies.get("publication")
-        if not publication:
-            publication = DEFAULTS['publication']
-    articles = get_news(publication)
-    # get cust weather based on user input or default
-    city = request.args.get('city')
-    if not city:
-        city = DEFAULTS['city']
+# get cust headlines , based on user input or default
+    publication = get_value_with_fallback("publication")
+    articles=get_news(publication)
+#    publication = request.args.get("publication")
+#    if not publication:
+#        publication = request.cookies.get("publication")
+#        if not publication:
+#            publication = DEFAULTS['publication']
+#    articles = get_news(publication)
+# get cust weather based on user input or default
+    city = get_value_with_fallback("city")
     weather = get_weather(city)
-    # get customized currency from user input or default
-    currency_from = request.args.get("currency_from")
-    if not currency_from:
-        currency_from = DEFAULTS['currency_from']
-    currency_to = request.args.get("currency_to")
-    if not currency_to:
-        currency_to = DEFAULTS['currency_to']
+#    city = request.args.get('city')
+#    if not city:
+#        city = DEFAULTS['city']
+#    weather = get_weather(city)
+# get customized currency from user input or default
+    currency_from = get_value_with_fallback("currency_from")
+    currency_to = get_value_with_fallback("currency_to")
     rate, currencies = get_rate(currency_from, currency_to)
+#    currency_from = request.args.get("currency_from")
+#   if not currency_from:
+#       currency_from = DEFAULTS['currency_from']
+#   currency_to = request.args.get("currency_to")
+#    if not currency_to:
+#        currency_to = DEFAULTS['currency_to']
+#    rate, currencies = get_rate(currency_from, currency_to)
+
     #return render_template("home.html", articles=articles, weather=weather, currency_from=currency_from,currency_to=currency_to, rate=rate, currencies=sorted(currencies))
     response = make_response(render_template("home.html", articles=articles, weather=weather, currency_from=currency_from,currency_to=currency_to, rate=rate, currencies=sorted(currencies)))
     expires = datetime.datetime.now() + datetime.timedelta(days=365)

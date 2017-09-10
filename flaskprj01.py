@@ -24,6 +24,14 @@ WEATHER_URL = "http://api.openweathermap.org/data/2.5/weather?q={}&units=metric&
 CURRENCY_URL = "https://openexchangerates.org//api/latest.json?app_id=3939e9bcc6ab47719d6da46537c431e6"
 
 
+def get_value_with_fallback(key):
+    if request.args.get(key):
+        return request.args.get(key)
+    if request.cookies.get(key):
+        return request.cookies.get(key)
+    return DEFAULTS[key]
+
+
 @app.route("/")
 def home():
     # get cust headlines , based on user input or default

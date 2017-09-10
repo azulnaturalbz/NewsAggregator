@@ -14,23 +14,22 @@
     <p>City: <b>{{ weather.city }},{{ weather.country }}</b></p>
     <p>{{ weather.description }}| {{ weather.temperature }}&#8451;</p>
     <h2>Currency</h2>
-    {{ currency_from }} = {{ currency_to }} {{ rate }}
+
     <form>
         from: <select name="currency_from">
-        <option value="USD">USD</option>
-        <option value="GBP">GBP</option>
-        <option value="EUR">EUR</option>
-        <option value="BZD">BZD</option>
+        {% for currency in currencies %}
+        <option value="{{ currency }}"{{ 'selected="selected"' if currency_from==currency }}>{{ currency }}</option>
+        {% endfor %}
         </select>
         to:<select name="currency_to">
-        <option value="USD">USD</option>
-        <option value="GBP">GBP</option>
-        <option value="EUR">EUR</option>
-        <option value="BZD">BZD</option>
+         {% for currency in currencies %}
+        <option value="{{ currency }}"{{ 'selected="selected"' if currency_to==currency }}>{{ currency }}</option>
+        {% endfor %}
         </select>
         <input type="submit" value="Submit">
     </select>
     </form>
+    {{ currency_from }} = {{ currency_to }} {{ rate }}
     <h2>Headlines</h2>
     <form>
         <input type="text" name="publication" placeholder="search" />

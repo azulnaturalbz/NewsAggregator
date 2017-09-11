@@ -14,7 +14,8 @@ RSS_FEEDS = {'bbn': 'https://www.breakingbelizenews.com/feed/',
              'lov': 'http://lovefm.com/feed/',
              'amd': 'http://amandala.com.bz/news/feed/',
              'sps': 'https://www.sanpedrosun.com/feed/',
-             'rpt': 'http://www.reporter.bz/feed/'}
+             'rpt': 'http://www.reporter.bz/feed/',
+             'mybz':'http://www.mybelize.net/feed/'}
 
 DEFAULTS = {'publication': 'bbn',
             'city': 'Belize,bz',

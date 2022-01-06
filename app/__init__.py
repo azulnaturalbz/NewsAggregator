@@ -12,7 +12,7 @@ app = Flask(__name__)
 
 RSS_FEEDS = {'breaking-belize-news': 'https://www.breakingbelizenews.com/feed/',
              'channel-7':'http://www.7newsbelize.com/rss.php',
-	     'channel-5':'https://edition.channel5belize.com/feed',
+	         'channel-5':'https://edition.channel5belize.com/feed',
              'love-news': 'http://lovefm.com/feed/',
              'amandala': 'http://amandala.com.bz/news/feed/',
              'san-pedro-sun': 'https://www.sanpedrosun.com/feed/',
@@ -45,7 +45,7 @@ def home():
     weather = get_weather(city)
 # get customized currency from user input or default
     response = make_response(render_template(
-        "home.html", articles=articles, weather=weather, options=RSS_FEEDS))
+        "home.html", articles=articles, weather=weather, options=RSS_FEEDS, publication=publication))
     expires = datetime.datetime.now() + datetime.timedelta(days=365)
     response.set_cookie("publication", publication, expires=expires)
     response.set_cookie("city", city, expires=expires)

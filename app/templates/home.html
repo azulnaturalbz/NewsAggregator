@@ -69,19 +69,23 @@
     <h2>Headlines for:</h2>
     <h3>{{publication}}</h3>
     <form>
-    <select name='publication' onchange='if(this.value != 0) { this.form.submit(); }' value='{{publication}}'>
-        <option value='0'>Select a source</option>
-        {% for key, value in options.items()%}
-        <option value='{{key}}'> {{key}}</option>
-        {%endfor%}
-    </select>
-</form>
+        <select name='publication' onchange='if(this.value != 0) { this.form.submit(); }' value='{{publication}}'>
+            <option value='0'>Select a source</option>
+            {% for key, value in options.items()%}
+            <option value='{{key}}'> {{key}}</option>
+            {%endfor%}
+        </select>
+    </form>
     <br/>
+    <section></section>
     {% for article in articles %}
+    <article>
     <b><a href="{{ article.link }}" target="_blank">{{ article.title }}</a></b><br/>
     <i>{{ article.published }}</i><br>
     <p>{{ article.summary }}</p><br>
-        <hr/>
+    <hr/>
+    </article>
+    </section>
     {%  endfor %}
     </div>
 </body>

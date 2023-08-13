@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+  web:
+    restart: always
+    build: .
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_APP=main.py
+      - FLASK_RUN_HOST=0.0.0.0
+      # Add more environment variables as needed
+      # - VARIABLE_NAME=value
+    env_file:
+      - .env

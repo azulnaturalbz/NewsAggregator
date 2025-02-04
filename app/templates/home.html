@@ -1,101 +1,141 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Headlines: {{publication}}</title>
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZC7D59TLXZ"></script>
-    <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
+  <meta charset="UTF-8" />
+  <title>Newsgg - {{ publication }}</title>
 
-    gtag('config', 'G-ZC7D59TLXZ');
-    </script>
-    <style>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
 
-        html {
-            font-family: Helvetica;
-            background: white;
+  <!-- Alpine.js (Optional for small interactive pieces) -->
+  <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
-        }
-        body{
-            background: lightblue;
-            max-width: 900px;
-            margin: 0 auto;
+  <!-- HTMX -->
+  <script src="https://unpkg.com/htmx.org@1.8.4"></script>
 
-        }
-        #header{
-            padding-top: 5%;
-            background: lightsteelblue;
+  <!-- META -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-        }
-        #inner-header{
-            padding-left: 10%;
-        }
-        #main{
-            padding-left: 10%;
-        }
-        input[type="text"],select {
-            color: grey;
-            border: 1px solid lightsteelblue;
-            height:30px;
-            line-height:15px ;
-            margin: 2px 6px 16px 0px;
-        }
-        input[type="submit"]{
-            padding: 5px 10px 5px 10px;
-            color:black;
-            background: lightsteelblue;
-            border: none;
-            box-shadow: 1px 1px 1px #4c6e91;
-        }
-        input [type="submit"]:hover{
-            background: steelblue;
-        }
-    </style>
 </head>
-<body>
-    <div id="header" class="jumbotron">
-         <div id="inner-header">
-             <h1>Headlines</h1>
-            <p> Headlines and Weather</p>
-         </div>
-    <hr/>
+<body class="bg-gray-100 text-gray-900 font-sans">
+
+  <!-- Header -->
+  <header class="bg-blue-600 text-white py-6 mb-4">
+    <div class="max-w-3xl mx-auto px-4">
+      <h1 class="text-3xl font-bold">Belize News Aggregator - Newsagg</h1>
+      <p class="text-sm opacity-80">Headlines and Weather</p>
     </div>
-    <div id="main">
-    <h2>Current Weather</h2>
-    <form>
-        <input type="text" name="city" placeholder="weather search">
-        <input type="submit" value="Submit">
-    </form>
-    <p>City: <b>{{ weather.city }},{{ weather.country }}</b></p>
-    <p>{{ weather.description }} | {{ weather.temperature }}&#8451;</p>
-    <h2>Headlines for:</h2>
-    <h3>{{publication}}</h3>
-    <form>
-        <select name='publication' onchange='if(this.value != 0) { this.form.submit(); }' value='{{publication}}'>
-            <option value='0'>Select a source</option>
-            {% for key, value in options.items()%}
-            <option value='{{key}}'> {{key}}</option>
-            {%endfor%}
-        </select>
-    </form>
-    <br/>
-    <section></section>
-    {% for article in articles %}
-    <article>
-    <b><a href="{{ article.link }}" target="_blank">{{ article.title }}</a></b><br/>
-    <i>{{ article.published }}</i><br>
-    <p>{{ article.summary }}</p><br>
-    <hr/>
-    </article>
+  </header>
+
+  <!-- Main Container -->
+  <main class="max-w-3xl mx-auto px-4">
+
+    <!-- Weather Section -->
+    <section class="mb-8">
+      <h2 class="text-2xl font-semibold mb-2">Current Weather</h2>
+
+      <form method="GET" action="/" class="flex items-center space-x-2 mb-4">
+        <!-- City input -->
+        <input
+          type="text"
+          name="city"
+          placeholder="Enter city for weather"
+          class="w-1/2 px-2 py-1 border border-gray-300 rounded"
+        />
+        <!-- Submit button -->
+        <button
+          type="submit"
+          class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-1 rounded"
+        >
+          Submit
+        </button>
+      </form>
+
+      <!-- Display current weather info -->
+      {% if weather.city %}
+      <div class="p-4 bg-white rounded shadow">
+        <p><strong>City:</strong> {{ weather.city }}, {{ weather.country }}</p>
+        <p><strong>Description:</strong> {{ weather.description }}</p>
+        <p><strong>Temperature:</strong> {{ weather.temperature }}&#8451;</p>
+      </div>
+      {% else %}
+      <div class="p-4 bg-yellow-100 text-yellow-800 rounded shadow">
+        <p>No weather data available.</p>
+      </div>
+      {% endif %}
     </section>
-    {%  endfor %}
-    </div>
+
+    <hr class="my-6" />
+
+    <!-- News Section -->
+    <section>
+      <h2 class="text-2xl font-semibold mb-2">Headlines</h2>
+      <div class="mb-4">
+        <p class="text-gray-700 mb-2">Currently showing: <span class="font-bold">{{ publication }}</span></p>
+
+        <!-- Dropdown to select a source (HTMX) -->
+        <select
+          name="publication"
+          id="publicationSelect"
+          class="border border-gray-300 rounded px-2 py-1"
+          hx-get="/articles"
+          hx-target="#articlesSection"
+          hx-include="[name='city']"
+          hx-params="*"
+        >
+          <!-- Dynamically list each feed source -->
+           <!-- Optional "All" or "Select a source" -->
+  <option value="all" {% if publication == 'all' %}selected{% endif %}>All Belize Sources</option>
+
+          {% for key, url in options.items() %}
+            <option
+              value="{{ key }}"
+              {% if publication == key %}selected{% endif %}
+            >
+              {{ readable_names[key] }}  <!-- The "soft" label -->
+            </option>
+          {% endfor %}
+        </select>
+
+        <!-- A quick button to reset to "all" (optional) -->
+        <button
+          class="ml-2 bg-gray-200 px-3 py-1 rounded hover:bg-gray-300"
+          onclick="document.getElementById('publicationSelect').value='all';
+                   htmx.trigger('#publicationSelect', 'change')"
+        >
+          Reset to All
+        </button>
+      </div>
+
+      <!-- Articles container (HTMX target) -->
+      <div id="articlesSection">
+        <!-- Render articles initially (server-side). On change, we replace this content. -->
+        {% for article in articles %}
+          <article class="mb-6 p-4 bg-white shadow rounded">
+            <h3 class="text-lg font-semibold">
+              <a href="{{ article.link }}" target="_blank" class="text-blue-600 hover:underline">
+                {{ article.title }}
+              </a>
+            </h3>
+            {% if article.published %}
+              <p class="text-sm text-gray-500">{{ article.published }}</p>
+            {% endif %}
+            <p class="mt-2 text-gray-700">
+              {{ article.summary }}
+            </p>
+          </article>
+        {% endfor %}
+
+        {% if articles|length == 0 %}
+        <div class="p-4 bg-red-100 text-red-800 rounded">
+          No articles found or feed unavailable.
+        </div>
+        {% endif %}
+      </div>
+
+    </section>
+
+  </main>
+
 </body>
 </html>
